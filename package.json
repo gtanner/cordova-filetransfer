@@ -9,6 +9,5 @@
     "node": "0.6.x"
   },
   "dependencies": {
-    "formidable": "1.0.x"
   }
 }

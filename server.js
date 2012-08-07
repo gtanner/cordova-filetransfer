@@ -12,14 +12,20 @@ http.createServer(function (req, res) {
 		res.writeHead(200, {'Content-Type': 'text/plain'});
 		res.end("Hello!\n");    
 	} else if (req.url == '/upload' && req.method.toLowerCase() == 'post') {
-        var form = new formidable.IncomingForm();
-        form.parse(req, function(err, fields, files) {
+        var body = '';
+
+        req.on('data', function (data) {
+            body += data;
+
+            if (body.length > 1e6) {
+                req.conection.distroy();
+            }
+        });
+
+        req.on('end', function () {
             res.writeHead(200, {'content-type': 'text/plain'});
-            console.log(util.inspect({fields: fields, files: files}));
-            
             res.write('received upload:\n\n');
-            res.write(util.inspect({fields: fields, files: files}));
-            console.log
+            res.write(body);
             res.end("\n");
         });
 	} else if (req.url.match(/\d{3}/)) { 
